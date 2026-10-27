@@ -1,0 +1,15 @@
+C:\Users\KEVINOMICS\Desktop\2026BLOCK6\cse325\week01\GreetingApp\bin\Debug\net10.0\GreetingApp.exe
+C:\Users\KEVINOMICS\Desktop\2026BLOCK6\cse325\week01\GreetingApp\bin\Debug\net10.0\GreetingApp.deps.json
+C:\Users\KEVINOMICS\Desktop\2026BLOCK6\cse325\week01\GreetingApp\bin\Debug\net10.0\GreetingApp.runtimeconfig.json
+C:\Users\KEVINOMICS\Desktop\2026BLOCK6\cse325\week01\GreetingApp\bin\Debug\net10.0\GreetingApp.dll
+C:\Users\KEVINOMICS\Desktop\2026BLOCK6\cse325\week01\GreetingApp\bin\Debug\net10.0\GreetingApp.pdb
+C:\Users\KEVINOMICS\Desktop\2026BLOCK6\cse325\week01\GreetingApp\obj\Debug\net10.0\GreetingApp.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\KEVINOMICS\Desktop\2026BLOCK6\cse325\week01\GreetingApp\obj\Debug\net10.0\GreetingApp.AssemblyInfoInputs.cache
+C:\Users\KEVINOMICS\Desktop\2026BLOCK6\cse325\week01\GreetingApp\obj\Debug\net10.0\GreetingApp.AssemblyInfo.cs
+C:\Users\KEVINOMICS\Desktop\2026BLOCK6\cse325\week01\GreetingApp\obj\Debug\net10.0\GreetingApp.csproj.CoreCompileInputs.cache
+C:\Users\KEVINOMICS\Desktop\2026BLOCK6\cse325\week01\GreetingApp\obj\Debug\net10.0\GreetingApp.sourcelink.json
+C:\Users\KEVINOMICS\Desktop\2026BLOCK6\cse325\week01\GreetingApp\obj\Debug\net10.0\GreetingApp.dll
+C:\Users\KEVINOMICS\Desktop\2026BLOCK6\cse325\week01\GreetingApp\obj\Debug\net10.0\refint\GreetingApp.dll
+C:\Users\KEVINOMICS\Desktop\2026BLOCK6\cse325\week01\GreetingApp\obj\Debug\net10.0\GreetingApp.pdb
+C:\Users\KEVINOMICS\Desktop\2026BLOCK6\cse325\week01\GreetingApp\obj\Debug\net10.0\GreetingApp.genruntimeconfig.cache
+C:\Users\KEVINOMICS\Desktop\2026BLOCK6\cse325\week01\GreetingApp\obj\Debug\net10.0\ref\GreetingApp.dll

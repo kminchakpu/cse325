@@ -1,0 +1,53 @@
+@ContosoPizza_HostAddress = https://localhost:7225
+
+### Get all pizzas
+GET {{ContosoPizza_HostAddress}}/pizza
+Accept: application/json
+
+###
+
+### Get pizza 1
+GET {{ContosoPizza_HostAddress}}/pizza/1
+Accept: application/json
+
+###
+
+### Create a new pizza
+POST {{ContosoPizza_HostAddress}}/pizza
+Content-Type: application/json
+
+{
+    "name": "Hawaii",
+    "isGlutenFree": false
+}
+
+###
+
+### Update pizza 3
+PUT {{ContosoPizza_HostAddress}}/pizza/3
+Content-Type: application/json
+
+{
+    "id": 3,
+    "name": "Hawaiian",
+    "isGlutenFree": false
+}
+
+###
+
+### Get pizza 3
+GET {{ContosoPizza_HostAddress}}/pizza/3
+Accept: application/json
+
+###
+
+### Delete pizza 3
+DELETE {{ContosoPizza_HostAddress}}/pizza/3
+
+###
+
+### Get all pizzas again
+GET {{ContosoPizza_HostAddress}}/pizza
+Accept: application/json
+
+###

@@ -1,0 +1,15 @@
+C:\Users\KEVINOMICS\Desktop\2026BLOCK6\cse325\week01\MyConsoleApp\bin\Debug\net10.0\MyConsoleApp.exe
+C:\Users\KEVINOMICS\Desktop\2026BLOCK6\cse325\week01\MyConsoleApp\bin\Debug\net10.0\MyConsoleApp.deps.json
+C:\Users\KEVINOMICS\Desktop\2026BLOCK6\cse325\week01\MyConsoleApp\bin\Debug\net10.0\MyConsoleApp.runtimeconfig.json
+C:\Users\KEVINOMICS\Desktop\2026BLOCK6\cse325\week01\MyConsoleApp\bin\Debug\net10.0\MyConsoleApp.dll
+C:\Users\KEVINOMICS\Desktop\2026BLOCK6\cse325\week01\MyConsoleApp\bin\Debug\net10.0\MyConsoleApp.pdb
+C:\Users\KEVINOMICS\Desktop\2026BLOCK6\cse325\week01\MyConsoleApp\obj\Debug\net10.0\MyConsoleApp.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\KEVINOMICS\Desktop\2026BLOCK6\cse325\week01\MyConsoleApp\obj\Debug\net10.0\MyConsoleApp.AssemblyInfoInputs.cache
+C:\Users\KEVINOMICS\Desktop\2026BLOCK6\cse325\week01\MyConsoleApp\obj\Debug\net10.0\MyConsoleApp.AssemblyInfo.cs
+C:\Users\KEVINOMICS\Desktop\2026BLOCK6\cse325\week01\MyConsoleApp\obj\Debug\net10.0\MyConsoleApp.csproj.CoreCompileInputs.cache
+C:\Users\KEVINOMICS\Desktop\2026BLOCK6\cse325\week01\MyConsoleApp\obj\Debug\net10.0\MyConsoleApp.sourcelink.json
+C:\Users\KEVINOMICS\Desktop\2026BLOCK6\cse325\week01\MyConsoleApp\obj\Debug\net10.0\MyConsoleApp.dll
+C:\Users\KEVINOMICS\Desktop\2026BLOCK6\cse325\week01\MyConsoleApp\obj\Debug\net10.0\refint\MyConsoleApp.dll
+C:\Users\KEVINOMICS\Desktop\2026BLOCK6\cse325\week01\MyConsoleApp\obj\Debug\net10.0\MyConsoleApp.pdb
+C:\Users\KEVINOMICS\Desktop\2026BLOCK6\cse325\week01\MyConsoleApp\obj\Debug\net10.0\MyConsoleApp.genruntimeconfig.cache
+C:\Users\KEVINOMICS\Desktop\2026BLOCK6\cse325\week01\MyConsoleApp\obj\Debug\net10.0\ref\MyConsoleApp.dll
