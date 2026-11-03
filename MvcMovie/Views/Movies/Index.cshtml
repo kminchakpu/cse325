@@ -1,0 +1,103 @@
+@model MvcMovie.Models.MovieGenreViewModel
+
+@{
+    ViewData["Title"] = "My Movies";
+}
+
+<h1>My Movies</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Add New Movie</a>
+</p>
+
+<form asp-controller="Movies" asp-action="Index" method="get" class="movie-search-form">
+    <div class="filter-group">
+        <label for="MovieGenre">Genre</label>
+        <select asp-for="MovieGenre" asp-items="Model.Genres">
+            <option value="">All Genres</option>
+        </select>
+    </div>
+
+    <div class="filter-group">
+        <label for="ReleaseYear">Year or Newer</label>
+        <select asp-for="ReleaseYear" asp-items="Model.Years">
+            <option value="">All Years</option>
+        </select>
+    </div>
+
+    <div class="filter-group">
+        <label for="SearchString">Title</label>
+        <input type="text"
+               asp-for="SearchString"
+               placeholder="Search movie title" />
+    </div>
+
+    <div class="filter-group filter-button">
+        <input type="submit" value="Filter" class="btn btn-primary" />
+    </div>
+
+    <div class="filter-group filter-button">
+        <a asp-action="Index" class="btn btn-secondary">Clear</a>
+    </div>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Movies![0].Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Movies![0].ReleaseDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Movies![0].Genre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Movies![0].Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Movies![0].Rating)
+            </th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Movies != null && Model.Movies.Any())
+        {
+            @foreach (var item in Model.Movies)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ReleaseDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Genre)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Rating)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="6">
+                    No movies match your search criteria.
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
