@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "+q08Ejtmn5w=",
+  "dgSpecHash": "XqrGa0Kl6iA=",
   "success": true,
   "projectFilePath": "C:\\Users\\KEVINOMICS\\Desktop\\2026BLOCK6\\cse325\\BlazorTodoApp\\BlazorTodoApp.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\KEVINOMICS\\.nuget\\packages\\microsoft.aspnetcore.app.internal.assets\\10.0.14\\microsoft.aspnetcore.app.internal.assets.10.0.14.nupkg.sha512"
+    "C:\\Users\\KEVINOMICS\\.nuget\\packages\\microsoft.aspnetcore.app.internal.assets\\10.0.15\\microsoft.aspnetcore.app.internal.assets.10.0.15.nupkg.sha512"
   ],
   "logs": []
 }
