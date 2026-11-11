@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\KEVINOMICS\\Desktop\\2026BLOCK6\\cse325\\BlazorApp\\BlazorApp.csproj": {}
+    "C:\\Users\\KEVINOMICS\\Desktop\\2026BLOCK6\\cse325\\BlazorApp\\BlazorApp.csproj": {}
   },
   "projects": {
-    "c:\\Users\\KEVINOMICS\\Desktop\\2026BLOCK6\\cse325\\BlazorApp\\BlazorApp.csproj": {
+    "C:\\Users\\KEVINOMICS\\Desktop\\2026BLOCK6\\cse325\\BlazorApp\\BlazorApp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\KEVINOMICS\\Desktop\\2026BLOCK6\\cse325\\BlazorApp\\BlazorApp.csproj",
+        "projectUniqueName": "C:\\Users\\KEVINOMICS\\Desktop\\2026BLOCK6\\cse325\\BlazorApp\\BlazorApp.csproj",
         "projectName": "BlazorApp",
-        "projectPath": "c:\\Users\\KEVINOMICS\\Desktop\\2026BLOCK6\\cse325\\BlazorApp\\BlazorApp.csproj",
+        "projectPath": "C:\\Users\\KEVINOMICS\\Desktop\\2026BLOCK6\\cse325\\BlazorApp\\BlazorApp.csproj",
         "packagesPath": "C:\\Users\\KEVINOMICS\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\KEVINOMICS\\Desktop\\2026BLOCK6\\cse325\\BlazorApp\\obj\\",
+        "outputPath": "C:\\Users\\KEVINOMICS\\Desktop\\2026BLOCK6\\cse325\\BlazorApp\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\KEVINOMICS\\AppData\\Roaming\\NuGet\\NuGet.Config"
