@@ -1,0 +1,545 @@
+
+@page "/multiplayer"
+@rendermode InteractiveServer
+
+@using Microsoft.AspNetCore.SignalR.Client
+@using Microsoft.JSInterop
+@using ConnectFour.Hubs
+@implements IAsyncDisposable
+
+@inject NavigationManager Navigation
+@inject IJSRuntime JSRuntime
+
+<PageTitle>Multiplayer - ConnectFour</PageTitle>
+
+<div class="multiplayer-page">
+
+    <h2>Online Multiplayer</h2>
+
+    <p class="text-muted">
+        Play Connect Four with another player online.
+    </p>
+
+    <div class="mb-3">
+        @if (IsConnected)
+        {
+            <span class="badge bg-success">
+                Connected to multiplayer server
+            </span>
+        }
+        else
+        {
+            <span class="badge bg-warning text-dark">
+                Connecting to multiplayer server...
+            </span>
+        }
+    </div>
+
+    @if (!string.IsNullOrEmpty(ErrorMessage))
+    {
+        <div class="alert alert-danger">
+            @ErrorMessage
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(StatusMessage))
+    {
+        <div class="alert alert-info">
+            @StatusMessage
+        </div>
+    }
+
+    @if (!RoomCreated && !HasJoinedRoom)
+    {
+        <div class="row g-4 mt-2">
+
+            <div class="col-md-6">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header">
+                        <h5 class="mb-0">Create a Game</h5>
+                    </div>
+
+                    <div class="card-body">
+                        <p>
+                            Create a new room and invite another player
+                            using your room code.
+                        </p>
+
+                        <button class="btn btn-primary"
+                                @onclick="CreateRoom"
+                                disabled="@(!IsConnected)">
+                            Create Game Room
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header">
+                        <h5 class="mb-0">Join a Game</h5>
+                    </div>
+
+                    <div class="card-body">
+                        <p>
+                            Enter the six-character room code
+                            provided by Player 1.
+                        </p>
+
+                        <div class="mb-3">
+                            <label for="roomCode" class="form-label">
+                                Room Code
+                            </label>
+
+                            <input id="roomCode"
+                                   class="form-control"
+                                   maxlength="6"
+                                   placeholder="Enter room code"
+                                   @bind="JoinRoomCode"
+                                   @bind:event="oninput" />
+                        </div>
+
+                        <button class="btn btn-success"
+                                @onclick="JoinRoom"
+                                disabled="@(!IsConnected ||
+                                           JoinRoomCode.Trim().Length != 6)">
+                            Join Game Room
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    }
+
+    @if (RoomCreated || HasJoinedRoom)
+    {
+        <div class="card shadow-sm mt-4">
+            <div class="card-body text-center">
+
+                <h5>Game Room</h5>
+
+                <p>
+                    Room Code: <strong>@RoomCode</strong>
+                </p>
+
+                <p>
+                    You are <strong>Player @PlayerNumber</strong>
+                </p>
+
+                @if (RoomCreated)
+                {
+                    <button class="btn btn-outline-secondary mb-3"
+                            @onclick="CopyRoomCode">
+                        Copy Room Code
+                    </button>
+                }
+
+                @if (OpponentConnected)
+                {
+                    <div class="alert alert-success">
+                        Both players are connected. The game can begin!
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-warning">
+                        Waiting for the other player to join...
+                    </div>
+                }
+
+            </div>
+        </div>
+    }
+
+    @if (OpponentConnected && Game is not null)
+    {
+        <div class="card shadow-sm mt-4">
+
+            <div class="card-header text-center">
+                <h5 class="mb-0">Connect Four Multiplayer</h5>
+            </div>
+
+            <div class="card-body">
+
+                <div class="player-information">
+
+                    <div class="player-label">
+                        <span class="player-indicator player-one"></span>
+                        <strong>Player 1</strong>
+                        <span class="text-muted">(Green)</span>
+                    </div>
+
+                    <div class="player-label">
+                        <span class="player-indicator player-two"></span>
+                        <strong>Player 2</strong>
+                        <span class="text-muted">(Purple)</span>
+                    </div>
+
+                </div>
+
+                <div class="text-center mt-3">
+
+                    @if (Game.Winner != 0)
+                    {
+                        <div class="alert alert-success">
+                            <h4>Player @Game.Winner Wins!</h4>
+                            <p class="mb-0">Congratulations!</p>
+                        </div>
+                    }
+                    else if (Game.IsDraw)
+                    {
+                        <div class="alert alert-info">
+                            <h4>It's a Draw!</h4>
+                            <p class="mb-0">The board is full.</p>
+                        </div>
+                    }
+                    else if (Game.CurrentPlayer == PlayerNumber)
+                    {
+                        <div class="alert alert-success">
+                            <strong>It's your turn!</strong>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info">
+                            Waiting for Player @Game.CurrentPlayer...
+                        </div>
+                    }
+
+                </div>
+
+                <div class="multiplayer-board-wrapper">
+
+                    <nav class="multiplayer-column-controls">
+                        @for (int col = 0; col < 7; col++)
+                        {
+                            var selectedColumn = col;
+
+                            <button type="button"
+                                    title="Drop a piece in column @(col + 1)"
+                                    disabled="@(!CanPlay)"
+                                    @onclick="() => PlayColumn(selectedColumn)">
+                                🔽
+                            </button>
+                        }
+                    </nav>
+
+                    <div class="multiplayer-game-container">
+
+                        <div class="multiplayer-board-grid">
+
+                            @for (int i = 0; i < 42; i++)
+                            {
+                                var cellIndex = i;
+                                var piece = Game.Board[cellIndex];
+                                var row = cellIndex / 7;
+                                var dropDistance = (row + 1) * 4;
+
+                                var pieceClass = piece switch
+                                {
+                                    1 => "player1",
+                                    2 => "player2",
+                                    _ => string.Empty
+                                };
+
+                                <div class="multiplayer-cell" @key="cellIndex">
+
+                                    <span class="@($"multiplayer-hole {pieceClass}")"
+                                          style="@(piece == 0
+                                              ? null
+                                              : $"--drop-distance: -{dropDistance}em;")">
+                                    </span>
+
+                                </div>
+                            }
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="text-center mt-4">
+
+                    <p class="text-muted">
+                        Player 1 uses green pieces.
+                        Player 2 uses purple pieces.
+                    </p>
+
+                    <p class="small">
+                        Your player number:
+                        <strong>@PlayerNumber</strong>
+                    </p>
+
+                </div>
+
+            </div>
+        </div>
+    }
+
+</div>
+
+@code {
+    private HubConnection? HubConnection;
+
+    private string RoomCode = string.Empty;
+    private string JoinRoomCode = string.Empty;
+    private string ErrorMessage = string.Empty;
+    private string StatusMessage = string.Empty;
+
+    private bool RoomCreated;
+    private bool HasJoinedRoom;
+    private bool OpponentConnected;
+
+    private int PlayerNumber;
+
+    private MultiplayerGameSnapshot? Game;
+
+    private bool IsConnected =>
+        HubConnection?.State == HubConnectionState.Connected;
+
+    private bool CanPlay =>
+        IsConnected &&
+        OpponentConnected &&
+        Game is not null &&
+        Game.Winner == 0 &&
+        !Game.IsDraw &&
+        Game.CurrentPlayer == PlayerNumber;
+
+    protected override async Task OnInitializedAsync()
+    {
+        HubConnection = new HubConnectionBuilder()
+            .WithUrl(Navigation.ToAbsoluteUri("/multiplayerhub"))
+            .WithAutomaticReconnect()
+            .Build();
+
+        HubConnection.On<MultiplayerGameSnapshot>(
+            "PlayerJoined",
+            snapshot =>
+            {
+                _ = InvokeAsync(() =>
+                {
+                    Game = snapshot;
+                    OpponentConnected = true;
+
+                    StatusMessage =
+                        "Both players are connected. You can now play!";
+
+                    StateHasChanged();
+                });
+            });
+
+        HubConnection.On<MultiplayerGameSnapshot>(
+            "MovePlayed",
+            snapshot =>
+            {
+                _ = InvokeAsync(() =>
+                {
+                    Game = snapshot;
+                    ErrorMessage = string.Empty;
+
+                    StateHasChanged();
+                });
+            });
+
+        HubConnection.On(
+            "PlayerDisconnected",
+            () =>
+            {
+                _ = InvokeAsync(() =>
+                {
+                    OpponentConnected = false;
+
+                    StatusMessage =
+                        "The other player has disconnected.";
+
+                    StateHasChanged();
+                });
+            });
+
+        HubConnection.Reconnecting += error =>
+        {
+            return InvokeAsync(() =>
+            {
+                StatusMessage =
+                    "Connection interrupted. Reconnecting...";
+
+                StateHasChanged();
+            });
+        };
+
+        HubConnection.Reconnected += connectionId =>
+        {
+            return InvokeAsync(() =>
+            {
+                StatusMessage =
+                    "Connection restored. Please create or join a room again.";
+
+                StateHasChanged();
+            });
+        };
+
+        try
+        {
+            await HubConnection.StartAsync();
+
+            StatusMessage =
+                "You are connected to the multiplayer server.";
+        }
+        catch (Exception)
+        {
+            ErrorMessage =
+                "Unable to connect to the multiplayer server. " +
+                "Please restart the application and try again.";
+        }
+    }
+
+    private async Task CreateRoom()
+    {
+        ErrorMessage = string.Empty;
+        StatusMessage = string.Empty;
+
+        var connection = HubConnection;
+
+        if (connection is null ||
+            connection.State != HubConnectionState.Connected)
+        {
+            ErrorMessage = "The multiplayer server is not connected.";
+            return;
+        }
+
+        try
+        {
+            RoomCode = await connection.InvokeAsync<string>("CreateRoom");
+
+            RoomCreated = true;
+            PlayerNumber = 1;
+
+            Game = await connection.InvokeAsync<MultiplayerGameSnapshot?>(
+                "GetGameState",
+                RoomCode);
+
+            StatusMessage =
+                "Your game room has been created. Share the code with Player 2.";
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage =
+                $"Unable to create a game room: {ex.Message}";
+        }
+    }
+
+    private async Task JoinRoom()
+    {
+        ErrorMessage = string.Empty;
+        StatusMessage = string.Empty;
+
+        var connection = HubConnection;
+
+        if (connection is null ||
+            connection.State != HubConnectionState.Connected)
+        {
+            ErrorMessage = "The multiplayer server is not connected.";
+            return;
+        }
+
+        try
+        {
+            var code = JoinRoomCode.Trim().ToUpperInvariant();
+
+            var joined = await connection.InvokeAsync<bool>(
+                "JoinRoom",
+                code);
+
+            if (joined)
+            {
+                RoomCode = code;
+                HasJoinedRoom = true;
+                PlayerNumber = 2;
+
+                Game = await connection.InvokeAsync<MultiplayerGameSnapshot?>(
+                    "GetGameState",
+                    RoomCode);
+
+                OpponentConnected = Game is not null &&
+                    Game.Player1Connected &&
+                    Game.Player2Connected;
+
+                StatusMessage =
+                    "You have successfully joined the game room.";
+            }
+            else
+            {
+                ErrorMessage =
+                    "Room not found, or the room already has two players.";
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage =
+                $"Unable to join the room: {ex.Message}";
+        }
+    }
+
+    private async Task PlayColumn(int column)
+    {
+        if (!CanPlay)
+        {
+            return;
+        }
+
+        ErrorMessage = string.Empty;
+
+        var connection = HubConnection;
+
+        if (connection is null ||
+            connection.State != HubConnectionState.Connected)
+        {
+            ErrorMessage = "The multiplayer server is not connected.";
+            return;
+        }
+
+        try
+        {
+            var result = await connection.InvokeAsync<MultiplayerMoveResult>(
+                "PlayMove",
+                RoomCode,
+                column);
+
+            if (!result.Success)
+            {
+                ErrorMessage = result.Message;
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage =
+                $"Unable to play your move: {ex.Message}";
+        }
+    }
+
+    private async Task CopyRoomCode()
+    {
+        try
+        {
+            await JSRuntime.InvokeVoidAsync(
+                "navigator.clipboard.writeText",
+                RoomCode);
+
+            StatusMessage = "Room code copied successfully.";
+        }
+        catch (Exception)
+        {
+            StatusMessage = "Please copy the room code manually.";
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (HubConnection is not null)
+        {
+            await HubConnection.DisposeAsync();
+        }
+    }
+}

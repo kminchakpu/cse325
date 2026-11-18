@@ -1,0 +1,38 @@
+div{
+    position:relative
+}
+div.board{
+    margin-top:1em;
+    flex-wrap:wrap;
+    width:30em;
+    height:24em;
+    overflow:hidden;
+    display:inline-flex;
+    flex-direction:row;
+    z-index:-5;
+    row-gap:0;
+    pointer-events:none;
+    border-left:10px solid var(--board-bg)
+}
+span.container{
+    width:4em;
+    height:4em;
+    margin:0;
+    padding:4px;
+    overflow:hidden;
+    background-color:transparent;
+    position:relative;
+    z-index:-2;
+    pointer-events:none
+}
+.container span{
+    width:3.5em;
+    height:3.5em;
+    border-radius:50%;
+    box-shadow:0 0 0 3em var(--board-bg);
+    left:0;
+    position:absolute;
+    display:block;
+    z-index:5;
+    pointer-events:none
+}
