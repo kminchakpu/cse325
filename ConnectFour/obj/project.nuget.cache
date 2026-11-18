@@ -1,10 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "nmsMdQ9XmDw=",
+  "dgSpecHash": "D3P/HKop/cI=",
   "success": true,
-  "projectFilePath": "C:\\Users\\KEVINOMICS\\Desktop\\2026BLOCK6\\cse325\\ConnectFour\\ConnectFour.csproj",
+  "projectFilePath": "c:\\Users\\KEVINOMICS\\Desktop\\2026BLOCK6\\cse325\\ConnectFour\\ConnectFour.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\KEVINOMICS\\.nuget\\packages\\microsoft.aspnetcore.app.internal.assets\\10.0.15\\microsoft.aspnetcore.app.internal.assets.10.0.15.nupkg.sha512"
+    "C:\\Users\\KEVINOMICS\\.nuget\\packages\\microsoft.aspnetcore.app.internal.assets\\10.0.15\\microsoft.aspnetcore.app.internal.assets.10.0.15.nupkg.sha512",
+    "C:\\Users\\KEVINOMICS\\.nuget\\packages\\microsoft.aspnetcore.http.connections.client\\10.0.15\\microsoft.aspnetcore.http.connections.client.10.0.15.nupkg.sha512",
+    "C:\\Users\\KEVINOMICS\\.nuget\\packages\\microsoft.aspnetcore.signalr.client\\10.0.15\\microsoft.aspnetcore.signalr.client.10.0.15.nupkg.sha512",
+    "C:\\Users\\KEVINOMICS\\.nuget\\packages\\microsoft.aspnetcore.signalr.client.core\\10.0.15\\microsoft.aspnetcore.signalr.client.core.10.0.15.nupkg.sha512"
   ],
   "logs": []
 }

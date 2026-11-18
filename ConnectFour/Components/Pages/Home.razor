@@ -1,3 +1,12 @@
-﻿@page "/"
+﻿
+@page "/"
+
+@using System.Drawing
+@inject GameState State
+
 <PageTitle>Connect Four</PageTitle>
-<Board />
+
+<Board @rendermode="InteractiveServer"
+       BoardColor="ColorTranslator.FromHtml(State.BoardColor)"
+       Player1Color="ColorTranslator.FromHtml(State.Player1Color)"
+       Player2Color="ColorTranslator.FromHtml(State.Player2Color)" />

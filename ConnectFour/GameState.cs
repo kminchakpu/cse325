@@ -1,192 +1,258 @@
+
 namespace ConnectFour;
 
 public class GameState
 {
+    static GameState()
+    {
+        CalculateWinningPlaces();
+    }
 
-	static GameState()
-	{
-		CalculateWinningPlaces();
-	}
+    public enum WinState
+    {
+        No_Winner = 0,
+        Player1_Wins = 1,
+        Player2_Wins = 2,
+        Tie = 3
+    }
 
-	/// <summary>
-	/// Indicate whether a player has won, the game is a tie, or game in ongoing
-	/// </summary>
-	public enum WinState
-	{
-		No_Winner = 0,
-		Player1_Wins = 1,
-		Player2_Wins = 2,
-		Tie = 3
-	}
+    public class GameRecord
+    {
+        public int GameNumber { get; set; }
+        public string Result { get; set; } = string.Empty;
+        public DateTime CompletedAt { get; set; }
+    }
 
-	/// <summary>
-	/// The player whose turn it is.  By default, player 1 starts first
-	/// </summary>
-	public int PlayerTurn => TheBoard.Count(x => x != 0) % 2 + 1;
+    // Current game information
+    public int PlayerTurn => TheBoard.Count(x => x != 0) % 2 + 1;
 
-	/// <summary>
-	/// Number of turns completed and pieces played so far in the game
-	/// </summary>
-	public int CurrentTurn { get { return TheBoard.Count(x => x != 0); } }
+    public int CurrentTurn => TheBoard.Count(x => x != 0);
 
-	public static readonly List<int[]> WinningPlaces = new();
+    // Game scores
+    public int Player1Wins { get; private set; }
 
-	public static void CalculateWinningPlaces() 
-	{
+    public int Player2Wins { get; private set; }
 
-		// Horizontal rows
-		for (byte row=0;row<6;row++){
+    public int Draws { get; private set; }
 
-			byte rowCol1 = (byte)(row * 7);
-			byte rowColEnd = (byte)((row + 1) * 7 - 1);
-			byte checkCol = rowCol1;
-			while (checkCol <= rowColEnd-3)
-			{
-				WinningPlaces.Add(new int[] { 
-					checkCol, 
-					(byte)(checkCol + 1), 
-					(byte)(checkCol + 2), 
-					(byte)(checkCol + 3) 
-					});
-				checkCol++;
-			}
+    public int TotalGames => Player1Wins + Player2Wins + Draws;
 
-		}
+    // Game history
+    private readonly List<GameRecord> _gameHistory = new();
 
-		// Vertical Columns
-		for (byte col = 0; col < 7; col++)
-		{
+    public IReadOnlyList<GameRecord> GameHistory => _gameHistory;
 
-			byte colRow1 = col;
-			byte colRowEnd = (byte)(35+col);
-			byte checkRow = colRow1;
-			while (checkRow <= 14+col)
-			{
-				WinningPlaces.Add(new int[] {
-					checkRow,
-					(byte)(checkRow + 7),
-					(byte)(checkRow + 14),
-					(byte)(checkRow + 21)
-					});
-				checkRow+=7;
-			}
+    // Game appearance settings
+    public string BoardColor { get; set; } = "#000000";
 
-		}
+    public string Player1Color { get; set; } = "#008000";
 
-		// forward slash diagonal "/"
-		for (byte col = 0; col < 4; col++)
-		{
+    public string Player2Color { get; set; } = "#800080";
 
-			// starting column must be 0-3
-			byte colRow1 = (byte)(21 + col);
-			byte colRowEnd = (byte)(35 + col);
-			byte checkPos = colRow1;
-			while (checkPos <= colRowEnd)
-			{
-				WinningPlaces.Add(new int[] {
-					checkPos,
-					(byte)(checkPos - 6),
-					(byte)(checkPos - 12),
-					(byte)(checkPos - 18)
-					});
-				checkPos += 7;
-			}
+    // Winning combinations
+    public static readonly List<int[]> WinningPlaces = new();
 
-		}
+    public static void CalculateWinningPlaces()
+    {
+        // Horizontal rows
+        for (byte row = 0; row < 6; row++)
+        {
+            byte rowCol1 = (byte)(row * 7);
+            byte rowColEnd = (byte)((row + 1) * 7 - 1);
+            byte checkCol = rowCol1;
 
-		// back slash diaganol "\"
-		for (byte col = 0; col < 4; col++)
-		{
+            while (checkCol <= rowColEnd - 3)
+            {
+                WinningPlaces.Add(new int[]
+                {
+                    checkCol,
+                    (byte)(checkCol + 1),
+                    (byte)(checkCol + 2),
+                    (byte)(checkCol + 3)
+                });
 
-			// starting column must be 0-3
-			byte colRow1 = (byte)(0 + col);
-			byte colRowEnd = (byte)(14 + col);
-			byte checkPos = colRow1;
-			while (checkPos <= colRowEnd)
-			{
-				WinningPlaces.Add(new int[] {
-					checkPos,
-					(byte)(checkPos + 8),
-					(byte)(checkPos + 16),
-					(byte)(checkPos + 24)
-					});
-				checkPos += 7;
-			}
+                checkCol++;
+            }
+        }
 
-		}
+        // Vertical columns
+        for (byte col = 0; col < 7; col++)
+        {
+            byte checkRow = col;
 
+            while (checkRow <= 14 + col)
+            {
+                WinningPlaces.Add(new int[]
+                {
+                    checkRow,
+                    (byte)(checkRow + 7),
+                    (byte)(checkRow + 14),
+                    (byte)(checkRow + 21)
+                });
 
-	}
+                checkRow += 7;
+            }
+        }
 
-	/// <summary>
-	/// Check the state of the board for a winning scenario
-	/// </summary>
-	/// <returns>0 - no winner, 1 - player 1 wins, 2 - player 2 wins, 3 - draw</returns>
-	public WinState CheckForWin()
-	{
+        // Forward slash diagonal "/"
+        for (byte col = 0; col < 4; col++)
+        {
+            byte colRow1 = (byte)(21 + col);
+            byte colRowEnd = (byte)(35 + col);
+            byte checkPos = colRow1;
 
-		// Exit immediately if less than 7 pieces are played
-		if (TheBoard.Count(x => x != 0) < 7) return WinState.No_Winner;
+            while (checkPos <= colRowEnd)
+            {
+                WinningPlaces.Add(new int[]
+                {
+                    checkPos,
+                    (byte)(checkPos - 6),
+                    (byte)(checkPos - 12),
+                    (byte)(checkPos - 18)
+                });
 
-		foreach (var scenario in WinningPlaces)
-		{
+                checkPos += 7;
+            }
+        }
 
-			if (TheBoard[scenario[0]] == 0) continue;
+        // Backslash diagonal "\"
+        for (byte col = 0; col < 4; col++)
+        {
+            byte colRow1 = col;
+            byte colRowEnd = (byte)(14 + col);
+            byte checkPos = colRow1;
 
-			if (TheBoard[scenario[0]] ==
-				TheBoard[scenario[1]] &&
-				TheBoard[scenario[1]] ==
-				TheBoard[scenario[2]] &&
-				TheBoard[scenario[2]] ==
-				TheBoard[scenario[3]]) return (WinState)TheBoard[scenario[0]];
+            while (checkPos <= colRowEnd)
+            {
+                WinningPlaces.Add(new int[]
+                {
+                    checkPos,
+                    (byte)(checkPos + 8),
+                    (byte)(checkPos + 16),
+                    (byte)(checkPos + 24)
+                });
 
-		}
+                checkPos += 7;
+            }
+        }
+    }
 
-		if (TheBoard.Count(x => x != 0) == 42) return WinState.Tie;
+    // Check whether a player has won or the game is a tie
+    public WinState CheckForWin()
+    {
+        if (CurrentTurn < 4)
+        {
+            return WinState.No_Winner;
+        }
 
-		return WinState.No_Winner;
+        foreach (var scenario in WinningPlaces)
+        {
+            if (TheBoard[scenario[0]] == 0)
+            {
+                continue;
+            }
 
-	}
+            if (TheBoard[scenario[0]] ==
+                TheBoard[scenario[1]] &&
+                TheBoard[scenario[1]] ==
+                TheBoard[scenario[2]] &&
+                TheBoard[scenario[2]] ==
+                TheBoard[scenario[3]])
+            {
+                return (WinState)TheBoard[scenario[0]];
+            }
+        }
 
-	/// <summary>
-	/// Takes the current turn and places a piece in the 0-indexed column requested
-	/// </summary>
-	/// <param name="column">0-indexed column to place the piece into</param>
-	/// <returns>The final array index where the piece resides</returns>
-	public byte PlayPiece(int column)
-	{
+        if (CurrentTurn == 42)
+        {
+            return WinState.Tie;
+        }
 
-		// Check for a current win
-		if (CheckForWin() != 0) throw new ArgumentException("Game is over");
+        return WinState.No_Winner;
+    }
 
-		// Check the column
-		if (TheBoard[column] != 0) throw new ArgumentException("Column is full");
+    // Record completed game results
+    public void RecordResult(WinState result)
+    {
+        string gameResult;
 
-		// Drop the piece in
-		var landingSpot = column;
-		for (var i=column;i<42;i+=7)
-		{
-			if (TheBoard[landingSpot + 7] != 0) break;
-			landingSpot = i;
-		}
+        switch (result)
+        {
+            case WinState.Player1_Wins:
+                Player1Wins++;
+                gameResult = "Player 1 Wins";
+                break;
 
-		TheBoard[landingSpot] = PlayerTurn;
+            case WinState.Player2_Wins:
+                Player2Wins++;
+                gameResult = "Player 2 Wins";
+                break;
 
-		return ConvertLandingSpotToRow(landingSpot);
+            case WinState.Tie:
+                Draws++;
+                gameResult = "Draw";
+                break;
 
-	}
+            default:
+                return;
+        }
 
-	public List<int> TheBoard { get; private set; } = new List<int>(new int[42]);
+        _gameHistory.Add(new GameRecord
+        {
+            GameNumber = _gameHistory.Count + 1,
+            Result = gameResult,
+            CompletedAt = DateTime.Now
+        });
+    }
 
-	public void ResetBoard() {
-		TheBoard = new List<int>(new int[42]);
-	}
+    // Play a piece in the selected column
+    public byte PlayPiece(int column)
+    {
+        if (CheckForWin() != WinState.No_Winner)
+        {
+            throw new ArgumentException("Game is over");
+        }
 
-	private byte ConvertLandingSpotToRow(int landingSpot)
-	{
+        if (column < 0 || column >= 7)
+        {
+            throw new ArgumentException("Invalid column");
+        }
 
-		return (byte)(Math.Floor(landingSpot / (decimal)7) + 1);
+        if (TheBoard[column] != 0)
+        {
+            throw new ArgumentException("Column is full");
+        }
 
-	}
+        var landingSpot = column;
 
+        for (var i = column; i < 42; i += 7)
+        {
+            if (i + 7 >= 42 || TheBoard[i + 7] != 0)
+            {
+                break;
+            }
+
+            landingSpot = i + 7;
+        }
+
+        TheBoard[landingSpot] = PlayerTurn;
+
+        return ConvertLandingSpotToRow(landingSpot);
+    }
+
+    // Connect Four board: 7 columns × 6 rows
+    public List<int> TheBoard { get; private set; } =
+        new List<int>(new int[42]);
+
+    // Reset the current board
+    public void ResetBoard()
+    {
+        TheBoard = new List<int>(new int[42]);
+    }
+
+    // Convert a board position into its row number
+    private byte ConvertLandingSpotToRow(int landingSpot)
+    {
+        return (byte)(Math.Floor(landingSpot / (decimal)7) + 1);
+    }
 }
