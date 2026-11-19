@@ -1,61 +1,19 @@
-﻿
-@inherits LayoutComponentBase
+﻿@inherits LayoutComponentBase
 
-<div class="app-shell">
-
-    <div class="page">
-
-        <div class="sidebar">
-            <NavMenu />
-        </div>
-
-        <main>
-            <div class="top-row px-4">
-                <a href="/how-to-play">How to Play</a>
-            </div>
-
-            <article class="content px-4">
-                @Body
-            </article>
-        </main>
-
+<div class="page">
+    <div class="sidebar">
+        <NavMenu />
     </div>
 
-    <footer class="app-footer">
-
-        <div class="footer-content">
-
-            <div class="footer-brand">
-                <h4>
-                    <i class="bi bi-controller"></i>
-                    Connect Four
-                </h4>
-
-                <p>
-                    Challenge friends, make your moves, and enjoy
-                    the classic Connect Four game.
-                </p>
-            </div>
-
-            <div class="footer-navigation">
-                <h5>Quick Links</h5>
-
-                <a href="/">Home</a>
-                <a href="/how-to-play">How to Play</a>
-                <a href="/multiplayer">Multiplayer</a>
-            </div>
-
+    <main>
+        <div class="top-row px-4">
+            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
         </div>
 
-        <div class="footer-bottom">
-            <p>
-                &copy; @DateTime.Now.Year Connect Four.
-                All rights reserved. Developed by <a href="https://github.com/dotnet/aspnetcore" target="_blank">Kevin Cross Minchakpu</a>
-            </p>
-        </div>
-
-    </footer>
-
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
 </div>
 
 <div id="blazor-error-ui" data-nosnippet>
